@@ -6,8 +6,8 @@ phases:
       node: nodejs12.x
   build:
     commands:
-      - java -version
-      - mvn package
+      - echo Entered the build phase...
+      - echo Build started on `date`
 artifacts:
   files:
     - '**/*'
