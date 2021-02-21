@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  CodeBuildRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+      Policies:
+        - PolicyName: CodeBuildAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: CloudWatchLogsPolicy
+                Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource:
+                  - '*'
+              - Sid: S3GetObjectPolicy
+                Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:GetObjectVersion'
+                Resource:
+                  - '*'
+              - Sid: S3PutObjectPolicy
+                Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                Resource:
+                  - '*'
+              - Sid: ECRPullPolicy
+                Effect: Allow
+                Action:
+                  - 'ecr:BatchCheckLayerAvailability'
+                  - 'ecr:GetDownloadUrlForLayer'
+                  - 'ecr:BatchGetImage'
+                Resource:
+                  - '*'
+              - Sid: ECRAuthPolicy
+                Effect: Allow
+                Action:
+                  - 'ecr:GetAuthorizationToken'
+                Resource:
+                  - '*'
+              - Sid: S3BucketIdentity
+                Effect: Allow
+                Action:
+                  - 's3:GetBucketAcl'
+                  - 's3:GetBucketLocation'
+                Resource: '*'
+  CodeBuildSourceCredential:
+    Type: 'AWS::CodeBuild::SourceCredential'
+    Properties:
+      AuthType: PERSONAL_ACCESS_TOKEN
+      ServerType: GITHUB
+      Token: '{{resolve:secretsmanager:GITHUB_ACCESS:SecretString:GITHUB_ACCESS_TOKEN}}'
+  CodeBuildProject:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Ref 'AWS::StackName'
+      ServiceRole: !GetAtt 
+        - CodeBuildRole
+        - Arn
+      Source:
+        Type: GITHUB
+        Location: 'https://github.com/sourabhDhariwal1234/github-aws-cicd.git'
+        BuildSpec: buildspec.yml
+        Auth:
+          Type: OAUTH
+          Resource: !Ref CodeBuildSourceCredential
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Trigger:
+        Webhook: true
+        filterGroups:
+          - - type: EVENT
+              pattern: 'PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED'
+            - type: BASE_REF
+              pattern: !Sub ^refs/heads/main$
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: 'aws/codebuild/standard:4.0.'
