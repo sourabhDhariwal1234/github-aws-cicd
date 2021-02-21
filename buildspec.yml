@@ -1,5 +1,7 @@
 version: 0.2
-
+variables:
+  parameter-store:
+    BUKET_NAME: git-cicdBucket
 phases:
   # install:
   #   runtime-versions:
@@ -8,8 +10,11 @@ phases:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
+  post_build:
+    commands:
+      - sam package -template-file template.yaml $BUKET_NAME -output-template out.yaml
 artifacts:
+  type: zip
   files:
-    - appspec.yml
-    - '**/*'
+    - out.yml
   discard-paths: yes
