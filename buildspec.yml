@@ -13,10 +13,9 @@ phases:
       - sam build
   post_build:
     commands:
-      - aws cloudformation package --template-file template.yaml --output-template-file outputSamTemplate.yaml --s3-bucket $BUKET_NAME
+      - sam package --template-file template.yaml --output-template-file outputSamTemplate.yaml --s3-bucket git-cicd-bucket
 artifacts:
   type: zip
   files:
     - outputSamTemplate.yaml
-    - template.yaml
   discard-paths: yes
