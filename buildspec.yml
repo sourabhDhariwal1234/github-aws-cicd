@@ -10,11 +10,12 @@ phases:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
+      - sam build
   post_build:
     commands:
-      - sam package -t template.yaml --s3-bucket $BUKET_NAME --output-template-file out.yaml
+      - sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket $BUKET_NAME
 artifacts:
   type: zip
   files:
-    - out.yml
+    - packaged.yml
   discard-paths: yes
