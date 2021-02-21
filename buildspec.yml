@@ -10,6 +10,5 @@ phases:
       - echo Build started on `date`
 artifacts:
   files:
-    - template.yaml
     - '**/*'
   discard-paths: yes
