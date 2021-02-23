@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
         response = {
             'statusCode': 200,
             'body': JSON.stringify({
-                message: 'Test With Ci Cd Pipeline',
+                message: 'Test With Ci CD Pipeline 23 Feb',
             })
         }
     } catch (err) {
