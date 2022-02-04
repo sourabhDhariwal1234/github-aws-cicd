@@ -1,7 +1,7 @@
 version: 0.2
-variables:
-  parameter-store:
-    BUKET_NAME: git-cicd-bucket
+# variables:
+#   parameter-store:
+#     BUKET_NAME: git-cicd-bucket
 phases:
   # install:
   #   runtime-versions:
