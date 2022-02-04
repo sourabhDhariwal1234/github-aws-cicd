@@ -6,7 +6,7 @@ phases:
   # install:
   #   runtime-versions:
   #     nodejs: 12
-  build1:
+  build:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
