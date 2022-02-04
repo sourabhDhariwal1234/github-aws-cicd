@@ -13,7 +13,7 @@ phases:
       - sam build
   post_build:
     commands:
-      - sam package --template-file template.yaml --output-template-file outputSamTemplate.yaml --s3-bucket git-cicd-bucket
+#       - sam package --template-file template.yaml --output-template-file outputSamTemplate.yaml --s3-bucket git-cicd-bucket
 artifacts:
   type: zip
   files:
