@@ -17,4 +17,5 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build --tag "docker-hello-world:latest"
+        docker images hello-world
       
