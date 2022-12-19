@@ -16,5 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-        docker images hello-world
+        docker version
+        docker ps -s
+        docker run hello-world
       
